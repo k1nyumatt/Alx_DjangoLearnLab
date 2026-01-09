@@ -31,5 +31,6 @@ This project is a library management system built with Django framework.
 
 ## Author
 
-ALX Django Learning Lab Student.
+ALX Django Learning Lab Student
+last update for checker configuration
 
