@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book List</title>
+</head>
+<body>
+    <h1>Book List</h1>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color: green;">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    
+    {% if perms.relationship_app.can_create %}
+        <a href="{% url 'book_create' %}">Add New Book</a>
+    {% endif %}
+    
+    <table border="1">
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Actions</th>
+        </tr>
+        {% for book in books %}
+        <tr>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author.name }}</td>
+            <td>
+                {% if perms.relationship_app.can_edit %}
+                    <a href="{% url 'book_edit' book.pk %}">Edit</a>
+                {% endif %}
+                {% if perms.relationship_app.can_delete %}
+                    <a href="{% url 'book_delete' book.pk %}">Delete</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
