@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Member View</title>
+</head>
+<body>
+    <h1>Member Dashboard</h1>
+    <p>Welcome, {{ user.username }}! You are a Member.</p>
+    <p>This page is only accessible to Members.</p>
+    <ul>
+        <li>Browse available books</li>
+        <li>View your borrowed books</li>
+        <li>Reserve books</li>
+    </ul>
+    <a href="{% url 'logout' %}">Logout</a>
+</body>
+</html>
