@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book List</title>
+</head>
+<body>
+    <h1>Book List</h1>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color: green;">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    
+    <!-- Search Form with CSRF Token for security -->
+    <form method="GET" action="{% url 'book_list' %}">
+        <input type="text" name="search" placeholder="Search books..." value="{{ request.GET.search }}">
+        <button type="submit">Search</button>
+    </form>
+    
+    {% if perms.bookshelf.can_create %}
+        <a href="{% url 'book_create' %}">Add New Book</a>
+    {% endif %}
+    
+    <table border="1">
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Year</th>
+            <th>Actions</th>
+        </tr>
+        {% for book in books %}
+        <tr>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.publication_year|default:"N/A" }}</td>
+            <td>
+                {% if perms.bookshelf.can_edit %}
+                    <a href="{% url 'book_edit' book.pk %}">Edit</a>
+                {% endif %}
+                {% if perms.bookshelf.can_delete %}
+                    <a href="{% url 'book_delete' book.pk %}">Delete</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No books found.</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

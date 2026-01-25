@@ -124,3 +124,70 @@ LOGOUT_REDIRECT_URL = '/relationship/login/'
 
 # Custom User Model
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
+# ==============================================================================
+# SECURITY SETTINGS
+# ==============================================================================
+
+# SECURITY WARNING: don't run with debug turned on in production!
+# Set to False in production to prevent sensitive information disclosure
+DEBUG = False  # Change to False for production
+
+# Allowed hosts - specify your domain names or IP addresses
+# In production, replace with your actual domain
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.yourdomain.com']
+
+# HTTPS and Cookie Security Settings
+# These settings ensure cookies are only sent over HTTPS connections
+CSRF_COOKIE_SECURE = True  # Ensures CSRF cookie is only sent over HTTPS
+SESSION_COOKIE_SECURE = True  # Ensures session cookie is only sent over HTTPS
+
+# Additional security headers
+# Protects against clickjacking attacks by preventing your site from being embedded in iframes
+X_FRAME_OPTIONS = 'DENY'
+
+# Enables browser's XSS filtering to detect and block XSS attacks
+SECURE_BROWSER_XSS_FILTER = True
+
+# Prevents browsers from MIME-sniffing content types
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Enforces HTTPS by redirecting all HTTP requests to HTTPS
+SECURE_SSL_REDIRECT = True  # Set to True in production with HTTPS
+
+# HTTP Strict Transport Security (HSTS)
+# Forces browsers to use HTTPS for all future requests to this domain
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply HSTS to all subdomains
+SECURE_HSTS_PRELOAD = True  # Allow your site to be preloaded in browsers' HSTS lists
+
+# Content Security Policy will be configured separately using django-csp
+
+# For development with DEBUG=False, we need to configure ALLOWED_HOSTS
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+# Optionally, for local development, you might want to keep DEBUG = True
+# and only set it to False when actually deploying to production
+# For now, let's set DEBUG = True for testing, then change to False before deployment
+DEBUG = True  # Keep True for local development, set False for production
+
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'csp.middleware.CSPMiddleware',  # Add this line for Content Security Policy
+]
+
+# Content Security Policy (CSP) Settings
+# Helps prevent XSS attacks by controlling which resources can be loaded
+CSP_DEFAULT_SRC = ("'self'",)  # Only allow resources from same origin by default
+CSP_SCRIPT_SRC = ("'self'",)  # Only allow scripts from same origin
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")  # Allow inline styles (needed for some frameworks)
+CSP_IMG_SRC = ("'self'", "data:", "https:")  # Allow images from same origin, data URIs, and HTTPS
+CSP_FONT_SRC = ("'self'",)  # Only allow fonts from same origin
+CSP_CONNECT_SRC = ("'self'",)  # Only allow AJAX/WebSocket connections to same origin
+CSP_FRAME_ANCESTORS = ("'none'",)  # Prevent embedding in iframes (similar to X-Frame-Options)

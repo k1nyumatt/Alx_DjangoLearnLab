@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form Example</title>
+</head>
+<body>
+    <h1>Example Form with Security</h1>
+    
+    <!-- Example form demonstrating CSRF protection -->
+    <form method="post">
+        {% csrf_token %}
+        <p>
+            <label>Name:</label>
+            <input type="text" name="name" required>
+        </p>
+        <p>
+            <label>Email:</label>
+            <input type="email" name="email" required>
+        </p>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
