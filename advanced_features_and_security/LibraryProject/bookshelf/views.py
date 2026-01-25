@@ -1,7 +1,7 @@
-from django.shortcuts import render
+from .forms import BookForm, ExampleForm
 
 # Create your views here.
-
+from .forms import BookForm, ExampleForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import permission_required
 from django.contrib import messages
@@ -250,3 +250,29 @@ def form_example(request):
             messages.error(request, 'All fields are required.')
     
     return render(request, 'bookshelf/form_example.html')
+
+def form_example(request):
+    """
+    Example view demonstrating secure form handling using Django forms.
+    
+    Security measures:
+    - Uses Django Form for automatic validation and sanitization
+    - CSRF protection via {% csrf_token %} in template
+    - XSS protection through Django's template auto-escaping
+    - Built-in validation prevents malicious input
+    """
+    if request.method == 'POST':
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            # Form data is automatically cleaned and validated
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            message = form.cleaned_data.get('message', '')
+            
+            # Django templates automatically escape output to prevent XSS
+            messages.success(request, f'Form submitted successfully for {name}!')
+            return redirect('form_example')
+    else:
+        form = ExampleForm()
+    
+    return render(request, 'bookshelf/form_example.html', {'form': form})
