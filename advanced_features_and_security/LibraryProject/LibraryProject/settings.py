@@ -191,3 +191,72 @@ CSP_IMG_SRC = ("'self'", "data:", "https:")  # Allow images from same origin, da
 CSP_FONT_SRC = ("'self'",)  # Only allow fonts from same origin
 CSP_CONNECT_SRC = ("'self'",)  # Only allow AJAX/WebSocket connections to same origin
 CSP_FRAME_ANCESTORS = ("'none'",)  # Prevent embedding in iframes (similar to X-Frame-Options)
+
+# ==============================
+# SECURITY SETTINGS (HTTPS)
+# ==============================
+
+# Redirect all HTTP requests to HTTPS
+SECURE_SSL_REDIRECT = True
+
+# HTTP Strict Transport Security (HSTS)
+# Instructs browsers to only use HTTPS for the next 1 year (31536000 seconds)
+SECURE_HSTS_SECONDS = 31536000
+
+# Apply HSTS policy to all subdomains
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+# Allow domain to be included in browser HSTS preload lists
+SECURE_HSTS_PRELOAD = True
+
+
+# ==============================
+# SECURE COOKIE SETTINGS
+# ==============================
+
+# Ensure session cookies are only sent over HTTPS
+SESSION_COOKIE_SECURE = True
+
+# Ensure CSRF cookies are only sent over HTTPS
+CSRF_COOKIE_SECURE = True
+
+
+# ==============================
+# SECURITY HEADERS
+# ==============================
+
+# Prevent the site from being embedded in an iframe (clickjacking protection)
+X_FRAME_OPTIONS = "DENY"
+
+# Prevent MIME-type sniffing
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Enable browser XSS filtering
+SECURE_BROWSER_XSS_FILTER = True
+
+server {
+    listen 80;
+    server_name yourdomain.com www.yourdomain.com;
+
+    # Redirect all HTTP traffic to HTTPS
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name yourdomain.com www.yourdomain.com;
+
+    ssl_certificate /etc/ssl/certs/your_cert.pem;
+    ssl_certificate_key /etc/ssl/private/your_key.pem;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers on;
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-For $remote_addr;
+    }
+}
+
