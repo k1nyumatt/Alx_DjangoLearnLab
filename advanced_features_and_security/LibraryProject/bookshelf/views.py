@@ -3,7 +3,8 @@ from django.contrib.auth.decorators import permission_required
 from django.contrib import messages
 from django.db.models import Q
 from .models import Book
-from .forms import BookForm, ExampleForm
+from .forms import BookForm
+from .forms import ExampleForm
 
 
 # View to list all books with search functionality (requires can_view permission)
