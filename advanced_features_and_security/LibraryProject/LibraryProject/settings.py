@@ -260,3 +260,11 @@ server {
     }
 }
 
+
+# ==============================
+# PROXY / HTTPS CONFIGURATION
+# ==============================
+
+# Tell Django to trust the X-Forwarded-Proto header
+# sent by the reverse proxy (e.g., Nginx or Apache)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
