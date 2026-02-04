@@ -94,9 +94,7 @@ class BookSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Book
-        # Include all fields in serialization
         fields = ['id', 'title', 'publication_year', 'author']
-        # Alternative: fields = '__all__'  # Would include all fields automatically
     
     def validate_publication_year(self, value):
         """
@@ -129,14 +127,10 @@ class BookSerializer(serializers.ModelSerializer):
             # Raises: ValidationError("Publication year cannot be in the future...")
         """
         current_year = datetime.now().year
-        
-        # Check if the publication year is in the future
         if value > current_year:
             raise serializers.ValidationError(
                 f"Publication year cannot be in the future. Current year is {current_year}."
             )
-        
-        # Return the value if validation passes
         return value
 
 
@@ -201,20 +195,8 @@ class AuthorSerializer(serializers.ModelSerializer):
         #     ]
         # }
     """
-    
-    # NESTED SERIALIZER FIELD
-    # This is the key to handling the Author-Book relationship
-    books = BookSerializer(
-        many=True,       # One author has MANY books (list of books)
-        read_only=True   # Only for reading, not for creating/updating
-    )
-    # The field name 'books' matches the related_name='books' in Book.author ForeignKey
-    # Django automatically uses author.books.all() to get related books
+    books = BookSerializer(many=True, read_only=True)
     
     class Meta:
         model = Author
-        fields = ['id', 'name', 'books']  # Include the nested 'books' field
-    
-    # Note: We don't need to override create() or update() methods because
-    # the books field is read_only. If we wanted writable nested serialization,
-    # we would need to implement custom create() and update() methods.
+        fields = ['id', 'name', 'books']
