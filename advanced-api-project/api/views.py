@@ -3,9 +3,8 @@ API Views for Book model using Django REST Framework Generic Views
 with Filtering, Searching, and Ordering capabilities
 """
 
-from rest_framework import generics, permissions
-from django_filters import rest_framework  # Correct import for the test
-from rest_framework.filters import SearchFilter, OrderingFilter
+from rest_framework import generics, permissions, filters
+from django_filters import rest_framework
 from .models import Book
 from .serializers import BookSerializer
 
@@ -38,7 +37,7 @@ class BookListView(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
     
     # Enable filtering, searching, and ordering
-    filter_backends = [rest_framework.DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filter_backends = [rest_framework.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     
     # Filtering: Specify which fields can be filtered
     filterset_fields = ['title', 'author', 'publication_year']
