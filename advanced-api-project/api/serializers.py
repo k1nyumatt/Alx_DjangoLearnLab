@@ -200,3 +200,17 @@ class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
         fields = ['id', 'name', 'books']
+
+from rest_framework import serializers
+from .models import Book
+
+class BookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = ['id', 'title', 'author', 'publication_year', 'isbn']
+    
+    def validate_publication_year(self, value):
+        """Custom validation for publication year"""
+        if value < 1000 or value > 2100:
+            raise serializers.ValidationError("Invalid publication year")
+        return value

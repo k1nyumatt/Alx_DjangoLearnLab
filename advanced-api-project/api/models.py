@@ -8,6 +8,20 @@ Models:
     - Author: Represents book authors
     - Book: Represents books written by authors
 
+from django.db import models
+
+class Book(models.Model):
+    title = models.CharField(max_length=200)
+    author = models.CharField(max_length=100)
+    publication_year = models.IntegerField()
+    isbn = models.CharField(max_length=13, unique=True, blank=True, null=True)
+    
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        ordering = ['title']
+
 Relationships:
     - One Author can have Many Books (One-to-Many)
     - Each Book belongs to exactly One Author
