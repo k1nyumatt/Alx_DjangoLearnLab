@@ -223,3 +223,146 @@ This project is for educational purposes as part of ALX Django Learning Lab.
 
 ## Author
 [Your Name]
+
+## Advanced Query Capabilities
+
+The Book API supports filtering, searching, and ordering to help you find exactly what you need.
+
+### Filtering
+
+Filter books by exact or partial matches on specific fields.
+
+**Available Filters:**
+- `title` - Filter by book title (case-insensitive partial match)
+- `author` - Filter by author name (case-insensitive partial match)
+- `publication_year` - Filter by exact publication year
+- `publication_year__gte` - Filter books published on or after a year
+- `publication_year__lte` - Filter books published on or before a year
+
+**Examples:**
+```bash
+# Get all books by a specific author
+GET /api/books/?author=John Doe
+
+# Get books published in 2023
+GET /api/books/?publication_year=2023
+
+# Get books published after 2020
+GET /api/books/?publication_year__gte=2020
+
+# Get books from 2020-2023
+GET /api/books/?publication_year__gte=2020&publication_year__lte=2023
+
+# Multiple filters
+GET /api/books/?author=Jane&publication_year=2024
+```
+
+### Searching
+
+Perform text searches across multiple fields simultaneously.
+
+**Search Fields:**
+- `title` - Book title
+- `author` - Author name
+
+**Examples:**
+```bash
+# Search for "Django" in title or author
+GET /api/books/?search=Django
+
+# Search for "Python programming"
+GET /api/books/?search=Python%20programming
+```
+
+### Ordering
+
+Sort results by one or more fields.
+
+**Available Ordering Fields:**
+- `title` - Sort by book title
+- `author` - Sort by author name
+- `publication_year` - Sort by publication year
+
+**Sort Direction:**
+- Ascending: Use field name as-is (e.g., `title`)
+- Descending: Prefix with `-` (e.g., `-title`)
+
+**Examples:**
+```bash
+# Order by title A-Z
+GET /api/books/?ordering=title
+
+# Order by title Z-A
+GET /api/books/?ordering=-title
+
+# Order by newest first
+GET /api/books/?ordering=-publication_year
+
+# Order by year (newest), then title (A-Z)
+GET /api/books/?ordering=-publication_year,title
+```
+
+### Combining Features
+
+You can combine filtering, searching, and ordering in a single request.
+
+**Examples:**
+```bash
+# Search for "Django", published after 2020, ordered by newest
+GET /api/books/?search=Django&publication_year__gte=2020&ordering=-publication_year
+
+# Filter by author, search in titles, order alphabetically
+GET /api/books/?author=Vincent&search=Django&ordering=title
+
+# Complex query
+GET /api/books/?author=Smith&publication_year__gte=2022&search=Python&ordering=-publication_year
+```
+
+## Implementation Details
+
+### Filter Backends
+The API uses three Django REST Framework filter backends:
+
+1. **DjangoFilterBackend** - Enables field-based filtering
+2. **SearchFilter** - Enables text search across multiple fields
+3. **OrderingFilter** - Enables result sorting
+
+### Configuration
+Located in `api/views.py`:
+```python
+filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+filterset_class = BookFilter  # Custom filter with advanced options
+search_fields = ['title', 'author']
+ordering_fields = ['title', 'author', 'publication_year']
+ordering = ['title']  # Default ordering
+```
+
+### Custom Filters
+Advanced filtering is handled by `BookFilter` in `api/filters.py`:
+- Case-insensitive partial matching for title and author
+- Range filtering for publication years
+- Exact matching for publication year
+
+### Search Behavior
+- Searches are case-insensitive
+- Searches across both title and author fields simultaneously
+- Partial matches are returned
+
+### Ordering Behavior
+- Default ordering: alphabetical by title (A-Z)
+- Multiple fields can be specified (comma-separated)
+- Descending order: prefix field with `-`
+
+## Quick API Reference
+
+| Feature | Parameter | Example |
+|---------|-----------|---------|
+| **Filter by title** | `?title=<value>` | `?title=Django` |
+| **Filter by author** | `?author=<value>` | `?author=Smith` |
+| **Filter by year** | `?publication_year=<year>` | `?publication_year=2023` |
+| **Year from** | `?publication_year__gte=<year>` | `?publication_year__gte=2020` |
+| **Year to** | `?publication_year__lte=<year>` | `?publication_year__lte=2023` |
+| **Search** | `?search=<query>` | `?search=Python` |
+| **Order ascending** | `?ordering=<field>` | `?ordering=title` |
+| **Order descending** | `?ordering=-<field>` | `?ordering=-publication_year` |
+| **Multiple ordering** | `?ordering=<field1>,<field2>` | `?ordering=-publication_year,title` |
