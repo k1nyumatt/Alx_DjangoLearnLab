@@ -366,3 +366,173 @@ Advanced filtering is handled by `BookFilter` in `api/filters.py`:
 | **Order ascending** | `?ordering=<field>` | `?ordering=title` |
 | **Order descending** | `?ordering=-<field>` | `?ordering=-publication_year` |
 | **Multiple ordering** | `?ordering=<field1>,<field2>` | `?ordering=-publication_year,title` |
+
+## Testing
+
+### Test Coverage
+
+The API includes comprehensive unit tests covering:
+
+**CRUD Operations:**
+- Creating books (authenticated users only)
+- Reading books (public access)
+- Updating books (authenticated users only)
+- Deleting books (authenticated users only)
+
+**Filtering, Searching, and Ordering:**
+- Filter by title, author, and publication year
+- Search across title and author fields
+- Order by title and publication year (ascending/descending)
+- Combined filtering and ordering
+
+**Permissions and Authentication:**
+- Unauthenticated access to read endpoints
+- Authenticated-only access to write endpoints
+- Token authentication validation
+
+**Data Integrity:**
+- Response status codes (200, 201, 204, 400, 401, 404)
+- Response data structure
+- Database state changes
+
+### Running Tests
+
+**Run all tests:**
+```bash
+python manage.py test api
+```
+
+**Run specific test class:**
+```bash
+python manage.py test api.test_views.BookListViewTests
+python manage.py test api.test_views.BookCreateViewTests
+```
+
+**Run with detailed output:**
+```bash
+python manage.py test api --verbosity=2
+```
+
+**Run and keep test database (for debugging):**
+```bash
+python manage.py test api --keepdb
+```
+
+### Test Structure
+
+Tests are organized into the following classes:
+
+1. **BookListViewTests** - Tests for listing books
+   - Unauthenticated/authenticated access
+   - Filtering by various fields
+   - Search functionality
+   - Ordering (ascending/descending)
+   - Combined operations
+
+2. **BookDetailViewTests** - Tests for retrieving single books
+   - Successful retrieval
+   - Non-existent book handling
+
+3. **BookCreateViewTests** - Tests for creating books
+   - Authenticated creation
+   - Unauthenticated rejection
+   - Invalid data handling
+   - Data validation
+
+4. **BookUpdateViewTests** - Tests for updating books
+   - Full updates (PUT)
+   - Partial updates (PATCH)
+   - Permission enforcement
+   - Non-existent book handling
+
+5. **BookDeleteViewTests** - Tests for deleting books
+   - Authenticated deletion
+   - Unauthenticated rejection
+   - Non-existent book handling
+
+6. **BookPermissionTests** - Tests for permission enforcement
+   - Public read access
+   - Authenticated write access
+
+### Expected Test Results
+
+When all tests pass, you should see output similar to:
+```
+Creating test database for alias 'default'...
+System check identified no issues (0 silenced).
+..................................
+----------------------------------------------------------------------
+Ran 34 tests in 2.345s
+
+OK
+Destroying test database for alias 'default'...
+```
+
+### Interpreting Test Results
+
+**Success:**
+- All tests pass with `OK` message
+- No errors or failures reported
+
+**Failure:**
+- `FAIL` indicates assertion failures (test logic errors)
+- `ERROR` indicates exceptions during test execution
+- Review traceback to identify the issue
+
+**Common Issues:**
+- Authentication token not set correctly
+- URL patterns not matching expected names
+- Model data not matching expected values
+- Permission classes not configured properly
+
+### Test Database
+
+- Tests use a separate test database
+- Database is created before tests and destroyed after
+- Use `--keepdb` flag to preserve database between test runs
+- No impact on development or production databases
+
+### Adding New Tests
+
+When adding new features, follow this pattern:
+```python
+class NewFeatureTests(BookAPITestCase):
+    """Tests for new feature"""
+    
+    def test_new_feature_success(self):
+        """Test successful operation"""
+        # Arrange: Set up test data
+        # Act: Perform the operation
+        # Assert: Verify the results
+        pass
+    
+    def test_new_feature_failure(self):
+        """Test failure scenarios"""
+        pass
+```
+
+### Continuous Integration
+
+These tests can be integrated into CI/CD pipelines:
+```yaml
+# Example GitHub Actions workflow
+- name: Run Tests
+  run: python manage.py test api --verbosity=2
+```
+
+### Test Coverage Report
+
+To generate a coverage report:
+```bash
+# Install coverage
+pip install coverage
+
+# Run tests with coverage
+coverage run --source='.' manage.py test api
+
+# Generate report
+coverage report
+
+# Generate HTML report
+coverage html
+```
