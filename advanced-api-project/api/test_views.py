@@ -86,4 +86,32 @@ class BookListViewTests(BookAPITestCase):
         """
         response = self.client.get(self.list_url)
         
-        self.assertEqual(response.status_
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 3)
+
+    def test_list_books_authenticated(self):
+        """
+        Test that authenticated users can retrieve the book list
+        """
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.token.key)
+        response = self.client.get(self.list_url)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 3)
+
+    def test_list_books_with_login(self):
+        """
+        Test that logged-in users can retrieve the book list
+        """
+        self.client.login(username='testuser', password='testpassword123')
+        response = self.client.get(self.list_url)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 3)
+        self.client.logout()
+
+    def test_filter_books_by_title(self):
+        """
+        Test filtering books by exact title
+        """
+        response = self.cli
