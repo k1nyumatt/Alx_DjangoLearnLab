@@ -15,3 +15,23 @@ class PostByTagListView(ListView):
         context['tag'] = get_object_or_404(Tag, slug=tag_slug)
         context['posts_count'] = self.get_queryset().count()
         return context
+
+def search_posts(request):
+    """Search for posts by title, content, or tags"""
+    query = request.GET.get('q', '')
+    results = Post.objects.none()
+    
+    if query:
+        results = Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+    
+    context = {
+        'query': query,
+        'results': results,
+        'results_count': results.count()
+    }
+    
+    return render(request, 'blog/search_results.html', context)
