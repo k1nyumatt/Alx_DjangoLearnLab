@@ -9,7 +9,7 @@ class Post(models.Model):
     content = models.TextField()
     published_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
-    tags = TaggableManager()  # Add this line for tagging functionality
+    tags = TaggableManager()  # Using django-taggit
     
     def __str__(self):
         return self.title
@@ -19,10 +19,6 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    """
-    Comment model for blog posts.
-    Allows users to comment on posts with full CRUD functionality.
-    """
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     content = models.TextField()
