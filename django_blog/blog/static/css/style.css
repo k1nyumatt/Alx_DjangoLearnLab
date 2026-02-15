@@ -463,3 +463,201 @@ footer {
     color: #333;
     margin-bottom: 0.5rem;
 }
+
+/* ... (keep existing styles) ... */
+
+/* Comments Section */
+.comments-section {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid #ddd;
+}
+
+.comments-section h3 {
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+.comments-section h4 {
+    color: #555;
+    margin-bottom: 1rem;
+}
+
+/* Comment Form */
+.comment-form-container {
+    background: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.comment-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1rem;
+    resize: vertical;
+}
+
+.comment-form textarea:focus {
+    outline: none;
+    border-color: #333;
+}
+
+.login-prompt {
+    background: #e9ecef;
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-prompt p {
+    margin: 0;
+    color: #555;
+}
+
+.login-prompt a {
+    color: #333;
+    font-weight: bold;
+}
+
+/* Comments List */
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.comment {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: box-shadow 0.2s;
+}
+
+.comment:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.comment-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.comment-author {
+    font-weight: bold;
+    color: #333;
+}
+
+.comment-date {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.comment-edited {
+    font-size: 0.75rem;
+    color: #999;
+    font-style: italic;
+}
+
+.comment-content {
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+}
+
+.comment-actions {
+    display: flex;
+    gap: 1rem;
+    padding-top: 0.5rem;
+}
+
+.comment-edit,
+.comment-delete {
+    font-size: 0.875rem;
+    text-decoration: none;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.comment-edit {
+    color: #333;
+    background: #e9ecef;
+}
+
+.comment-edit:hover {
+    background: #dee2e6;
+}
+
+.comment-delete {
+    color: #dc3545;
+    background: #f8d7da;
+}
+
+.comment-delete:hover {
+    background: #f5c6cb;
+}
+
+.no-comments {
+    text-align: center;
+    color: #999;
+    padding: 2rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+/* Comment Form Page */
+.comment-form-page {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.comment-form-page h2 {
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+.post-context {
+    background: #f9f9f9;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border-left: 4px solid #333;
+}
+
+.post-context h3 {
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.post-context .post-meta {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Comment Preview in Delete Confirmation */
+.comment-preview {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.comment-preview .comment-header {
+    margin-bottom: 1rem;
+}
+
+.comment-preview .comment-content {
+    color: #555;
+}

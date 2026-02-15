@@ -1,0 +1,45 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}
+    {% if is_edit %}Edit Comment{% else %}Add Comment{% endif %} - Django Blog
+{% endblock %}
+
+{% block content %}
+<div class="comment-form-page">
+    <h2>{% if is_edit %}Edit Comment{% else %}Add Comment{% endif %}</h2>
+    
+    <div class="post-context">
+        <h3>On: {{ post.title }}</h3>
+        <p class="post-meta">By {{ post.author.username }}</p>
+    </div>
+    
+    <form method="post" class="comment-form">
+        {% csrf_token %}
+        
+        {% if form.errors %}
+            <div class="form-errors">
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <p class="error">{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <div class="form-group">
+            <label for="{{ form.content.id_for_label }}">{{ form.content.label }}</label>
+            {{ form.content }}
+            {% if form.content.help_text %}
+                <small>{{ form.content.help_text }}</small>
+            {% endif %}
+        </div>
+        
+        <div class="form-buttons">
+            <button type="submit" class="btn-primary">
+                {% if is_edit %}Update Comment{% else %}Post Comment{% endif %}
+            </button>
+            <a href="{% url 'post-detail' post.pk %}" class="btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
