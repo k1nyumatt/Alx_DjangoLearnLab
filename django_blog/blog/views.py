@@ -307,3 +307,71 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def get_success_url(self):
         # Redirect back to the post detail page
         return reverse_lazy('post-detail', kwargs={'pk': self.object.post.pk})
+
+from django.db.models import Q
+from taggit.models import Tag
+
+# Search and Tag Views
+
+def search_posts(request):
+    """
+    Search for posts based on title, content, or tags.
+    Uses Q objects for complex queries.
+    """
+    query = request.GET.get('q', '')
+    results = Post.objects.none()  # Empty queryset by default
+    
+    if query:
+        # Search in title, content, and tags
+        results = Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+    
+    context = {
+        'query': query,
+        'results': results,
+        'results_count': results.count()
+    }
+    
+    return render(request, 'blog/search_results.html', context)
+
+
+def posts_by_tag(request, tag_name):
+    """
+    Display all posts associated with a specific tag.
+    """
+    tag = get_object_or_404(Tag, name=tag_name)
+    posts = Post.objects.filter(tags__name=tag_name)
+    
+    context = {
+        'tag': tag,
+        'posts': posts,
+        'posts_count': posts.count()
+    }
+    
+    return render(request, 'blog/posts_by_tag.html', context)
+
+
+class TagListView(ListView):
+    """
+    Display all available tags with post counts.
+    """
+    model = Tag
+    template_name = 'blog/tag_list.html'
+    context_object_name = 'tags'
+    
+    def get_queryset(self):
+        # Get all tags that are actually used
+        return Tag.objects.all().order_by('name')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add post count for each tag
+        tags_with_counts = []
+        for tag in context['tags']:
+            count = Post.objects.filter(tags__name=tag.name).count()
+            tags_with_counts.append({'tag': tag, 'count': count})
+        context['tags_with_counts'] = tags_with_counts
+        return context

@@ -9,19 +9,34 @@
 </head>
 <body>
     <header>
-        <h1>My Django Blog</h1>
-        <nav>
-            <a href="{% url 'post-list' %}">Home</a>
-            {% if user.is_authenticated %}
-                <a href="{% url 'post-create' %}">New Post</a>
-                <a href="{% url 'profile' %}">Profile</a>
-                <a href="{% url 'logout' %}">Logout</a>
-                <span style="color: #ddd;">Hello, {{ user.username }}!</span>
-            {% else %}
-                <a href="{% url 'login' %}">Login</a>
-                <a href="{% url 'register' %}">Register</a>
-            {% endif %}
-        </nav>
+        <div class="header-content">
+            <h1>My Django Blog</h1>
+            <nav>
+                <a href="{% url 'post-list' %}">Home</a>
+                <a href="{% url 'tag-list' %}">Tags</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'post-create' %}">New Post</a>
+                    <a href="{% url 'profile' %}">Profile</a>
+                    <a href="{% url 'logout' %}">Logout</a>
+                    <span class="user-greeting">Hello, {{ user.username }}!</span>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                    <a href="{% url 'register' %}">Register</a>
+                {% endif %}
+            </nav>
+        </div>
+        
+        <!-- Search Bar -->
+        <div class="search-container">
+            <form action="{% url 'search' %}" method="get" class="search-form">
+                <input type="text" 
+                       name="q" 
+                       placeholder="Search posts by title, content, or tags..." 
+                       value="{{ request.GET.q }}"
+                       class="search-input">
+                <button type="submit" class="search-button">Search</button>
+            </form>
+        </div>
     </header>
     
     {% if messages %}

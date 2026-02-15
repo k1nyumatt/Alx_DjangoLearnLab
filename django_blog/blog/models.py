@@ -2,12 +2,14 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from taggit.managers import TaggableManager
 
 class Post(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
     published_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+    tags = TaggableManager()  # Add this line for tagging functionality
     
     def __str__(self):
         return self.title
@@ -28,13 +30,12 @@ class Comment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        ordering = ['created_at']  # Oldest comments first
+        ordering = ['created_at']
     
     def __str__(self):
         return f'Comment by {self.author.username} on {self.post.title}'
 
 
-# Profile model (if you created it earlier)
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
