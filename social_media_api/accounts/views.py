@@ -50,3 +50,21 @@ def unfollow_user(request, user_id):
         return Response({'error': 'User not found'}, status=404)
     request.user.following.remove(user_to_unfollow)
     return Response({'message': f'You have unfollowed {user_to_unfollow.username}'})
+
+from .models import CustomUser
+
+class UserProfileView(generics.GenericAPIView):
+    queryset = CustomUser.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        return Response({
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'bio': user.bio,
+            'profile_picture': str(user.profile_picture),
+            'followers': [f.username for f in user.followers.all()],
+            'following': [f.username for f in user.following.all()],
+        })
