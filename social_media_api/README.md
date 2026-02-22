@@ -286,3 +286,131 @@ Authorization: Token <your_token_here>
 - **Action:** Try to edit or delete another user's post
 - **Expected:** Returns 403 Forbidden
 - **Result:** Pass
+
+## Deployment
+
+### Configuration Files
+- `Procfile` — tells Heroku to use gunicorn as the web server
+- `runtime.txt` — specifies the Python version
+- `requirements.txt` — lists all project dependencies
+
+### Environment Variables
+The following environment variables must be set in production:
+- `SECRET_KEY` — Django secret key
+- `DATABASE_URL` — database connection URL
+- `DEBUG` — set to False in production
+
+### Deployment Steps
+1. Install dependencies: `pip install -r requirements.txt`
+2. Set environment variables
+3. Run migrations: `python manage.py migrate`
+4. Collect static files: `python manage.py collectstatic`
+5. Start the server: `gunicorn social_media_api.wsgi`
+
+### Security Settings
+- DEBUG is set to False in production
+- HTTPS is enforced via SECURE_SSL_REDIRECT
+- XSS protection is enabled
+- Clickjacking protection is enabled via X_FRAME_OPTIONS
+
+### Maintenance
+- Monitor logs regularly for errors
+- Keep dependencies updated via pip
+- Back up the database regularly
+
+## Deployment Documentation
+
+### Tools Used
+- **Gunicorn** — production web server
+- **Whitenoise** — serves static files
+- **dj-database-url** — manages database configuration
+- **Heroku** — cloud hosting platform
+
+---
+
+### Configuration Files
+
+**Procfile**
+```
+web: gunicorn social_media_api.wsgi --log-file -
+```
+
+**runtime.txt**
+```
+python-3.11.0
+```
+
+**Key Production Settings in settings.py**
+```
+DEBUG = False
+SECURE_SSL_REDIRECT = True
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+```
+
+---
+
+### Environment Variables
+
+Set these on your hosting platform before deploying:
+
+| Variable | Description |
+|----------|-------------|
+| `SECRET_KEY` | Django secret key |
+| `DATABASE_URL` | Database connection URL |
+| `DEBUG` | Set to False in production |
+
+---
+
+### Deployment Steps
+
+1. Clone the repository
+```bash
+   git clone <your-repo-url>
+   cd social_media_api
+```
+
+2. Install dependencies
+```bash
+   pip install -r requirements.txt
+```
+
+3. Set environment variables
+```bash
+   heroku config:set SECRET_KEY='your-secret-key' --app your-app-name
+   heroku config:set DEBUG=False --app your-app-name
+```
+
+4. Push to Heroku
+```bash
+   heroku git:remote -a your-app-name
+   git push heroku master:main
+```
+
+5. Run migrations
+```bash
+   heroku run python manage.py migrate --app your-app-name
+```
+
+6. Collect static files
+```bash
+   heroku run python manage.py collectstatic --app your-app-name
+```
+
+---
+
+### Live URL
+```
+https://social-media-api-matt.herokuapp.com/
+```
+
+---
+
+### Maintenance Plan
+- Monitor application logs regularly: `heroku logs --tail --app your-app-name`
+- Keep all dependencies up to date by running `pip install -r requirements.txt` after any updates
+- Back up the database before any major changes
+- Rotate the SECRET_KEY periodically and update the environment variable on Heroku
