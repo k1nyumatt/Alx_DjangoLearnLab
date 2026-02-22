@@ -184,3 +184,105 @@ Authorization: Token <your_token_here>
 - Results are paginated, 10 per page — use `?page=2` to navigate
 - Only the author of a post or comment can edit or delete it
 - The feed only shows posts from users you follow, ordered by newest first
+
+## Likes & Notifications
+
+### Like a Post
+- **URL:** `POST /api/posts/<id>/like/`
+- **Auth required:** Yes
+- **Success Response:** `200 OK`
+```json
+  { "message": "Post liked" }
+```
+- **Already liked Response:** `400 Bad Request`
+```json
+  { "message": "You already liked this post" }
+```
+
+### Unlike a Post
+- **URL:** `POST /api/posts/<id>/unlike/`
+- **Auth required:** Yes
+- **Success Response:** `200 OK`
+```json
+  { "message": "Post unliked" }
+```
+- **Not liked Response:** `400 Bad Request`
+```json
+  { "message": "You have not liked this post" }
+```
+
+### View Notifications
+- **URL:** `GET /api/notifications/`
+- **Auth required:** Yes
+- **Success Response:** `200 OK`
+```json
+  [
+    {
+      "id": 1,
+      "actor": "john",
+      "verb": "liked your post",
+      "is_read": false,
+      "timestamp": "2024-01-01T12:00:00Z"
+    }
+  ]
+```
+- **Note:** All notifications are marked as read after this endpoint is called.
+
+---
+
+## Testing
+
+### User Registration
+- **Action:** POST to `/api/accounts/register/` with username, email, and password
+- **Expected:** Returns a token
+- **Result:** Pass
+
+### User Login
+- **Action:** POST to `/api/accounts/login/` with username and password
+- **Expected:** Returns the user token
+- **Result:** Pass
+
+### Follow a User
+- **Action:** POST to `/api/accounts/follow/2/` with a valid token in the header
+- **Expected:** Returns a success message confirming the follow
+- **Result:** Pass
+
+### Unfollow a User
+- **Action:** POST to `/api/accounts/unfollow/2/` with a valid token in the header
+- **Expected:** Returns a success message confirming the unfollow
+- **Result:** Pass
+
+### Create a Post
+- **Action:** POST to `/api/posts/` with title and content, token in header
+- **Expected:** Returns the created post object
+- **Result:** Pass
+
+### View Feed
+- **Action:** GET to `/api/posts/feed/` with token in header
+- **Expected:** Returns posts from followed users ordered by newest first
+- **Result:** Pass
+
+### Like a Post
+- **Action:** POST to `/api/posts/1/like/` with token in header
+- **Expected:** Returns like confirmation and creates a notification for the post author
+- **Result:** Pass
+
+### Like a Post Twice
+- **Action:** POST to `/api/posts/1/like/` again with the same token
+- **Expected:** Returns 400 error — already liked
+- **Result:** Pass
+
+### Unlike a Post
+- **Action:** POST to `/api/posts/1/unlike/` with token in header
+- **Expected:** Returns unlike confirmation
+- **Result:** Pass
+
+### View Notifications
+- **Action:** GET to `/api/notifications/` with token in header
+- **Expected:** Returns list of notifications, then marks them all as read
+- **Result:** Pass
+
+### Permission Enforcement
+- **Action:** Try to edit or delete another user's post
+- **Expected:** Returns 403 Forbidden
+- **Result:** Pass

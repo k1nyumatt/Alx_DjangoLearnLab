@@ -16,3 +16,12 @@ urlpatterns = [
     path('', include(router.urls)),
     path('feed/', user_feed),
 ]
+
+from .views import like_post, unlike_post
+
+urlpatterns = [
+    path('', include(router.urls)),
+    path('feed/', user_feed),
+    path('<int:pk>/like/', like_post),
+    path('<int:pk>/unlike/', unlike_post),
+]
