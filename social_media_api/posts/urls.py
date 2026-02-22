@@ -9,3 +9,10 @@ router.register(r'comments', CommentViewSet)  # generates /comments/, /comments/
 urlpatterns = [
     path('', include(router.urls)),
 ]
+
+from .views import user_feed
+
+urlpatterns = [
+    path('', include(router.urls)),
+    path('feed/', user_feed),
+]

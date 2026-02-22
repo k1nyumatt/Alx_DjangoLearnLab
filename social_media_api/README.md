@@ -124,3 +124,63 @@ Authorization: Token <your_token_here>
 | DELETE | `/api/comments/<id>/` | Delete your comment | Yes |
 
 Posts can be searched using `?search=keyword` in the URL. Results are paginated, 10 per page.
+
+## Social Media API
+
+A RESTful API built with Django and Django REST Framework that supports user authentication, posting, commenting, following users, and a personal feed.
+
+---
+
+## Setup
+```bash
+pip install django djangorestframework pillow
+python manage.py migrate
+python manage.py runserver
+```
+
+---
+
+## Authentication
+
+Register or log in to receive a token. Send it with every protected request:
+```
+Authorization: Token <your_token_here>
+```
+
+---
+
+## Endpoints
+
+### Accounts
+
+| Method | URL | Description | Auth Required |
+|--------|-----|-------------|---------------|
+| POST | `/api/accounts/register/` | Create a new account | No |
+| POST | `/api/accounts/login/` | Log in and get token | No |
+| GET | `/api/accounts/profile/` | View your profile | Yes |
+| POST | `/api/accounts/follow/<id>/` | Follow a user | Yes |
+| POST | `/api/accounts/unfollow/<id>/` | Unfollow a user | Yes |
+
+### Posts & Comments
+
+| Method | URL | Description | Auth Required |
+|--------|-----|-------------|---------------|
+| GET | `/api/posts/` | List all posts | No |
+| POST | `/api/posts/` | Create a post | Yes |
+| GET | `/api/posts/<id>/` | View a single post | No |
+| PUT | `/api/posts/<id>/` | Edit your post | Yes |
+| DELETE | `/api/posts/<id>/` | Delete your post | Yes |
+| GET | `/api/posts/feed/` | View feed from followed users | Yes |
+| GET | `/api/comments/` | List all comments | No |
+| POST | `/api/comments/` | Add a comment | Yes |
+| PUT | `/api/comments/<id>/` | Edit your comment | Yes |
+| DELETE | `/api/comments/<id>/` | Delete your comment | Yes |
+
+---
+
+## Notes
+
+- Posts can be searched using `?search=keyword` in the URL
+- Results are paginated, 10 per page — use `?page=2` to navigate
+- Only the author of a post or comment can edit or delete it
+- The feed only shows posts from users you follow, ordered by newest first
