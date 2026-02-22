@@ -99,3 +99,14 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+
+import os
+
+PORT = os.environ.get('PORT', '8000')
+```
+
+Just paste it near the top of your `settings.py` after the other `os.environ` lines. Then commit and push:
+```
+git add social_media_api/settings.py
+git commit -m "add PORT to settings"
+git push heroku master:main
